@@ -7,12 +7,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+// 이렇게 클래스 @Transactional를 붙이면, 클래스의 각 테스트ㅔ이스에 전부 @Transactional 붙은 것과 동일
+// @TEst + @Transactional 조합은 자동으로 롤백을 유발시킨다.
+@Transactional
 @ActiveProfiles("test")
 class UserRepositoryTests {
     @Autowired
@@ -58,5 +62,24 @@ class UserRepositoryTests {
         assertThat(u2.getUsername()).isEqualTo("user2");
         assertThat(u2.getEmail()).isEqualTo("user2@test.com");
         assertThat(u2.getPassword()).isEqualTo("{noop}1234");
+    }
+
+    @Test
+    @DisplayName("모든 회원 수")
+    void t4() {
+        int count = userRepository.getQslCount();
+
+        assertThat(count).isGreaterThan(0);
+    }
+
+    @Test
+    @DisplayName("가장 오래된 회원")
+    void t5() {
+        SiteUser u1 = userRepository.getQslUserOrderByIdAscOne();
+
+        assertThat(u1.getId()).isEqualTo(1L);
+        assertThat(u1.getUsername()).isEqualTo("user1");
+        assertThat(u1.getEmail()).isEqualTo("user1@test.com");
+        assertThat(u1.getPassword()).isEqualTo("{noop}1234");
     }
 }
