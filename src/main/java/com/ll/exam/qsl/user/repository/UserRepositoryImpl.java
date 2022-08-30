@@ -3,8 +3,13 @@ package com.ll.exam.qsl.user.repository;
 import com.ll.exam.qsl.user.entity.SiteUser;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.support.PageableExecutionUtils;
 
+
+import org.springframework.data.domain.Pageable;
 import java.util.List;
+import java.util.function.LongSupplier;
 
 import static com.ll.exam.qsl.user.entity.QSiteUser.siteUser;
 
@@ -62,8 +67,27 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         return jpaQueryFactory
                 .select(siteUser)
                 .from(siteUser)
-                .where(siteUser.username.contains(kw).or(siteUser.email.contains(kw)))
+                .where(siteUser.username.contains(kw)
+                        .or(siteUser.email.contains(kw)))
                 .orderBy(siteUser.id.desc())
                 .fetch();
+    }
+
+
+    @Override
+    public Page<SiteUser> searchQsl(String kw, Pageable pageable) {
+        List<SiteUser> users =  jpaQueryFactory
+                .select(siteUser)
+                .from(siteUser)
+                .where(siteUser.username.contains(kw)
+                        .or(siteUser.email.contains(kw)) )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(siteUser.id.desc())
+                .fetch();
+
+        LongSupplier totalSupplier = () -> 2;
+
+        return PageableExecutionUtils.getPage(users, pageable, null);
     }
 }
