@@ -1,5 +1,6 @@
 package com.ll.exam.qsl;
 
+import com.ll.exam.qsl.interesetKeyword.entity.InterestKeyword;
 import com.ll.exam.qsl.user.entity.SiteUser;
 import com.ll.exam.qsl.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,12 +38,14 @@ class UserRepositoryTests {
                 .username("user3")
                 .password("{noop}1234")
                 .email("user3@test.com")
+                .interestKeyword(null)
                 .build();
 
         SiteUser u4 = SiteUser.builder()
                 .username("user4")
                 .password("{noop}1234")
                 .email("user4@test.com")
+                .interestKeyword(null)
                 .build();
 
         // SiteUser u2 = new SiteUser(null, "user2", "{noop}1234", "user2@test.com");
@@ -208,5 +212,29 @@ class UserRepositoryTests {
         assertThat(u.getUsername()).isEqualTo("user1");
         assertThat(u.getEmail()).isEqualTo("user1@test.com");
         assertThat(u.getPassword()).isEqualTo("{noop}1234");
+    }
+
+    @Test
+    @DisplayName("")
+    @Rollback(value = false)
+    void t10() {
+        SiteUser u2 = userRepository.getQslUser(2L);
+
+        InterestKeyword i1 = new InterestKeyword();
+        i1.setContent("user5");
+
+        u2.addInterestKeywordContent("게임");
+        u2.addInterestKeywordContent("노래");
+        u2.addInterestKeywordContent("공부");
+        // u2.addInterestKeywordContent("공부");
+
+        userRepository.save(u2);
+
+//        assertThat(u2.getId()).isEqualTo(2L);
+//        assertThat(u2.getUsername()).isEqualTo("user2");
+//        assertThat(u2.getEmail()).isEqualTo("user2@test.com");
+//        assertThat(u2.getPassword()).isEqualTo("{noop}1234");
+//        assertThat(u2).isEqualTo(3);
+
     }
 }
