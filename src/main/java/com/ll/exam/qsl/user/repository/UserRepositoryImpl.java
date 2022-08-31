@@ -1,6 +1,7 @@
 package com.ll.exam.qsl.user.repository;
 
 import com.ll.exam.qsl.interesetKeyword.entity.InterestKeyword;
+import com.ll.exam.qsl.interesetKeyword.entity.QInterestKeyword;
 import com.ll.exam.qsl.user.entity.SiteUser;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -102,12 +103,24 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         return PageableExecutionUtils.getPage(users, pageable, totalSupplier);
     }
 
+
     @Override
     public List<SiteUser> getQslUsersByInterestKeyword(String kw) {
+        /*SELECT SU.*
+        FROM site_user AS SU
+        INNER JOIN site_user_interest_keywords AS SUIK
+        ON SU.id = SUIK.site_user_id
+        INNER JOIN interest_keyword AS IK
+        ON IK.content = SUIK.interest_keywords_content
+        WHERE IK.content = "축구";
+        */
+        QInterestKeyword IK = new QInterestKeyword("IK");
+
         return jpaQueryFactory
                 .select(siteUser)
                 .from(siteUser)
-                .where(siteUser.interestKeyword.contains(new InterestKeyword(kw)))
+                .innerJoin(siteUser.interestKeyword, IK)
+                .where(IK.content.eq(kw))
                 .fetch();
     }
 }
