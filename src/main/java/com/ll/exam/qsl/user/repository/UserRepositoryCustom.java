@@ -1,5 +1,6 @@
 package com.ll.exam.qsl.user.repository;
 
+import com.ll.exam.qsl.interesetKeyword.entity.InterestKeyword;
 import com.ll.exam.qsl.user.entity.SiteUser;
 import org.springframework.data.domain.Page;
 
@@ -17,5 +18,7 @@ public interface UserRepositoryCustom {
 
     List<SiteUser> searchQsl(String kw);
     Page<SiteUser> searchQsl(String kw, Pageable pageable);
+
+    List<SiteUser> getQslUsersByInterestKeyword(String kw);
 }
 

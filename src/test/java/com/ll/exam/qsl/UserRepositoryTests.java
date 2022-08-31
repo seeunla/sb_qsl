@@ -6,6 +6,7 @@ import com.ll.exam.qsl.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.convert.DataSizeUnit;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -230,11 +231,24 @@ class UserRepositoryTests {
 
         userRepository.save(u2);
 
-//        assertThat(u2.getId()).isEqualTo(2L);
-//        assertThat(u2.getUsername()).isEqualTo("user2");
-//        assertThat(u2.getEmail()).isEqualTo("user2@test.com");
-//        assertThat(u2.getPassword()).isEqualTo("{noop}1234");
-//        assertThat(u2).isEqualTo(3);
+    }
+
+    @Test
+    @DisplayName("축구에 관심이 있는 회원을 검색할 수 있다.")
+    void t11() {
+        //테스트 케이스 추가
+        // 구현, QueryDSL
+        List<SiteUser> users = userRepository.getQslUsersByInterestKeyword("축구");
+
+        assertThat(users.size()).isEqualTo(1);
+
+        SiteUser u1 = users.get(0);
+
+        assertThat(u1.getId()).isEqualTo(1L);
+        assertThat(u1.getUsername()).isEqualTo("user1");
+        assertThat(u1.getEmail()).isEqualTo("user1@test.com");
+        assertThat(u1.getPassword()).isEqualTo("{noop}1234");
+
 
     }
 }

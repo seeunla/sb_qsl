@@ -1,5 +1,6 @@
 package com.ll.exam.qsl.user.repository;
 
+import com.ll.exam.qsl.interesetKeyword.entity.InterestKeyword;
 import com.ll.exam.qsl.user.entity.SiteUser;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -99,5 +100,14 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         LongSupplier totalSupplier = () -> 2;
 
         return PageableExecutionUtils.getPage(users, pageable, totalSupplier);
+    }
+
+    @Override
+    public List<SiteUser> getQslUsersByInterestKeyword(String kw) {
+        return jpaQueryFactory
+                .select(siteUser)
+                .from(siteUser)
+                .where(siteUser.interestKeyword.contains(new InterestKeyword(kw)))
+                .fetch();
     }
 }
