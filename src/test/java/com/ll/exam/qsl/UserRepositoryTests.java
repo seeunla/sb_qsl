@@ -6,7 +6,6 @@ import com.ll.exam.qsl.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.convert.DataSizeUnit;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,7 +14,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -216,8 +214,7 @@ class UserRepositoryTests {
     }
 
     @Test
-    @DisplayName("")
-    @Rollback(value = false)
+    @DisplayName("회원에게 관심사를 등록할 수 있다.")
     void t10() {
         SiteUser u2 = userRepository.getQslUser(2L);
 
@@ -248,7 +245,33 @@ class UserRepositoryTests {
         assertThat(u1.getUsername()).isEqualTo("user1");
         assertThat(u1.getEmail()).isEqualTo("user1@test.com");
         assertThat(u1.getPassword()).isEqualTo("{noop}1234");
-
-
     }
+
+//    @Test
+//    @DisplayName("no qsl, 축구에 관심이 있는 회원들 검색")
+//    void t12() {
+//        List<SiteUser> users = userRepository.findByInterestKeyword("축구");
+//
+//        assertThat(users.size()).isEqualTo(1);
+//
+//        SiteUser u = users.get(0);
+//
+//        assertThat(u.getId()).isEqualTo(1L);
+//        assertThat(u.getUsername()).isEqualTo("user1");
+//        assertThat(u.getEmail()).isEqualTo("user1@test.com");
+//        assertThat(u.getPassword()).isEqualTo("{noop}1234");
+//    }
+
+    @Test
+    @DisplayName("u2=아이돌, u1=팬 u1은 u2의 팔로워 이다.")
+    @Rollback(value = false)
+    void t13() {
+        SiteUser u1 = userRepository.getQslUser(1L);
+        SiteUser u2 = userRepository.getQslUser(2L);
+
+        u1.follow(u2);
+
+        userRepository.save(u1);
+    }
+
 }
