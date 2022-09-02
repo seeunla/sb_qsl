@@ -37,14 +37,14 @@ class UserRepositoryTests {
                 .username("user3")
                 .password("{noop}1234")
                 .email("user3@test.com")
-                .interestKeyword(null)
+                .interestKeywords(null)
                 .build();
 
         SiteUser u4 = SiteUser.builder()
                 .username("user4")
                 .password("{noop}1234")
                 .email("user4@test.com")
-                .interestKeyword(null)
+                .interestKeywords(null)
                 .build();
 
         // SiteUser u2 = new SiteUser(null, "user2", "{noop}1234", "user2@test.com");

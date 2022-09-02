@@ -29,9 +29,9 @@ public class SiteUser {
     @Column(unique = true)
     private String email;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @Builder.Default
-    private Set<InterestKeyword> interestKeyword = new HashSet<>();
+    private Set<InterestKeyword> interestKeywords = new HashSet<>();
 
     @Builder.Default
     @ManyToMany(cascade = CascadeType.ALL)
@@ -42,7 +42,7 @@ public class SiteUser {
     private Set<SiteUser> followings = new HashSet<>();
 
     public void addInterestKeywordContent(String keyword) {
-        interestKeyword.add(new InterestKeyword(keyword));
+        interestKeywords.add(new InterestKeyword(this, keyword));
     }
 
     public void follow(SiteUser following) {

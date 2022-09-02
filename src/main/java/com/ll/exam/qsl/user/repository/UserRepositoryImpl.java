@@ -119,7 +119,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         return jpaQueryFactory
                 .select(siteUser)
                 .from(siteUser)
-                .innerJoin(siteUser.interestKeyword, IK)
+                .innerJoin(siteUser.interestKeywords, IK)
                 .where(IK.content.eq(kw))
                 .fetch();
     }
