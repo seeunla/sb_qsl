@@ -284,7 +284,6 @@ class UserRepositoryTests {
 
     @Test
     @DisplayName("특정회원의 follower들과 following들을 모두 알 수 있어야 한다.")
-    @Rollback(false)
     void t15() {
         SiteUser u1 = userRepository.getQslUser(1L);
         SiteUser u2 = userRepository.getQslUser(2L);
@@ -308,4 +307,12 @@ class UserRepositoryTests {
         assertThat(u2.getFollowings().size()).isEqualTo(0);
     }
 
+    @Test
+    @DisplayName("u1은 더 이상 농구에 관심이 없습니다.")
+    @Rollback(value = false)
+    void t16() {
+        SiteUser u1 = userRepository.getQslUser(1L);
+
+        u1.removeInterestKeywordContent("농구");
+    }
 }
