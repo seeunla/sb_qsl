@@ -57,4 +57,9 @@ public class SiteUser {
     public void removeInterestKeywordContent(String keyword) {
         interestKeywords.remove(new InterestKeyword(this, keyword));
     }
+
+    public void findInterestKeywordContentByFollowings(SiteUser user) {
+        user.getInterestKeywords();
+
+    }
 }

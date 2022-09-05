@@ -2,6 +2,7 @@ package com.ll.exam.qsl.user.repository;
 
 import com.ll.exam.qsl.interesetKeyword.entity.InterestKeyword;
 import com.ll.exam.qsl.interesetKeyword.entity.QInterestKeyword;
+import com.ll.exam.qsl.user.entity.QSiteUser;
 import com.ll.exam.qsl.user.entity.SiteUser;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.function.LongSupplier;
 
+import static com.ll.exam.qsl.interesetKeyword.entity.QInterestKeyword.interestKeyword;
 import static com.ll.exam.qsl.user.entity.QSiteUser.siteUser;
 
 @RequiredArgsConstructor
@@ -121,6 +123,31 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 .from(siteUser)
                 .innerJoin(siteUser.interestKeywords, IK)
                 .where(IK.content.eq(kw))
+                .fetch();
+    }
+
+    @Override
+    public List<InterestKeyword> getInterestKeywordByFollowings(SiteUser user) {
+        return jpaQueryFactory
+                .select(interestKeyword)
+                .from(interestKeyword)
+                .innerJoin(interestKeyword.user, siteUser)
+                .where(interestKeyword.user.in(user.getFollowings()))
+                .fetch();
+    }
+
+    @Override
+    public List<String> getByInterestKeywordContentsByFollowingsOf(SiteUser user) {
+
+        QSiteUser siteUser2 = new QSiteUser("siteUser2");
+
+        return jpaQueryFactory
+                .select(interestKeyword.content)
+                .distinct()
+                .from(interestKeyword)
+                .innerJoin(interestKeyword.user, siteUser)
+                .innerJoin(siteUser.followers, siteUser2)
+                .where(siteUser2.id.eq(user.getId()))
                 .fetch();
     }
 }
